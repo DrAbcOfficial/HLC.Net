@@ -215,7 +215,7 @@ public partial class MainWindow : Window
     {
         Process.Start(new ProcessStartInfo
         {
-            FileName = "https://github.com/DrAbcOfficial/HLC.Net",
+            FileName = "https://github.com/DrAbcOfficial/HLC.Net/wiki",
             UseShellExecute = true
         });
     }
