@@ -14,13 +14,14 @@
         ExtendClientAreaChromeHints="NoChrome"
         CanResize="False"
         SizeToContent="WidthAndHeight"
+        Icon="avares://HLC.Net/Assets/logo.png"
         Title="ConfigWindow">
     <Design.DataContext>
         <vm:ConfigWindowViewModel/>
     </Design.DataContext>
   <StackPanel Width="400" Margin="4">
     <DockPanel Name="TitleBar" Margin="4">
-      <Image Width="20">/Assets/avalonia-logo.ico</Image>
+      <Image Width="20">avares://HLC.Net/Assets/logo.png</Image>
       <Label Content="{x:Static assets:Resources.Title}"/>
     </DockPanel>
     <DockPanel Margin="4">

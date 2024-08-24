@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="400"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="400"
     xmlns:assets="clr-namespace:HLC.Net.Assets"
         x:Class="HLC.Net.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -14,14 +14,18 @@
         ExtendClientAreaToDecorationsHint="True"
         CanResize="False"
         SizeToContent="WidthAndHeight"
+        Icon="avares://HLC.Net/Assets/logo.png"
         Title="HLC.Net">
   <Design.DataContext>
     <vm:MainWindowViewModel/>
   </Design.DataContext>
   <Panel>
+    <Border Name="MessageCountainer" Opacity="0" HorizontalAlignment="Center" CornerRadius="10" Background="LightGray" ZIndex="999" Padding="10" Margin="0,0,0,-300" Width="300" Height="80" MaxWidth="450" MaxHeight="150">
+      <TextBlock Name="Message" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    </Border>
     <StackPanel Width="800">
       <DockPanel Margin="4">
-        <Image Width="20">/Assets/avalonia-logo.ico</Image>
+        <Image Width="20">avares://HLC.Net/Assets/logo.png</Image>
         <Label Content="{x:Static assets:Resources.Title}"/>
       </DockPanel>
       <Grid Name="MenuBar" ColumnDefinitions="*,*,*,*,*,*">

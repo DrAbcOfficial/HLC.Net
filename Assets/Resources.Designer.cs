@@ -196,6 +196,33 @@ namespace HLC.Net.Assets {
         }
         
         /// <summary>
+        ///   查找类似 Message_NullImage 的本地化字符串。
+        /// </summary>
+        public static string Message_NullImage {
+            get {
+                return ResourceManager.GetString("Message_NullImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Message_SaveDone 的本地化字符串。
+        /// </summary>
+        public static string Message_SaveDone {
+            get {
+                return ResourceManager.GetString("Message_SaveDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Message_TooBigImage 的本地化字符串。
+        /// </summary>
+        public static string Message_TooBigImage {
+            get {
+                return ResourceManager.GetString("Message_TooBigImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Operate_Blur 的本地化字符串。
         /// </summary>
         public static string Operate_Blur {

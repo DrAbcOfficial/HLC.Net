@@ -204,4 +204,13 @@
   <data name="Config_GamePath" xml:space="preserve">
     <value>Game path:</value>
   </data>
+  <data name="Message_NullImage" xml:space="preserve">
+    <value>Null image, Please Open a new one</value>
+  </data>
+  <data name="Message_TooBigImage" xml:space="preserve">
+    <value>Image too big, please auto resize it</value>
+  </data>
+  <data name="Message_SaveDone" xml:space="preserve">
+    <value>Save Completed!</value>
+  </data>
 </root>

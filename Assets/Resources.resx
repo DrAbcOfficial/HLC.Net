@@ -207,4 +207,13 @@
   <data name="Config_GamePath" xml:space="preserve">
     <value>Config_GamePath</value>
   </data>
+  <data name="Message_NullImage" xml:space="preserve">
+    <value>Message_NullImage</value>
+  </data>
+  <data name="Message_TooBigImage" xml:space="preserve">
+    <value>Message_TooBigImage</value>
+  </data>
+  <data name="Message_SaveDone" xml:space="preserve">
+    <value>Message_SaveDone</value>
+  </data>
 </root>

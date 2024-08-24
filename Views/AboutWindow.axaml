@@ -10,6 +10,7 @@
         ExtendClientAreaToDecorationsHint="True"
         CanResize="False"
         SizeToContent="WidthAndHeight"
+        Icon="avares://HLC.Net/Assets/logo.png"
         Title="AboutWindow">
   <StackPanel Width="300" Height="220">
     <Panel Height="20"/>
