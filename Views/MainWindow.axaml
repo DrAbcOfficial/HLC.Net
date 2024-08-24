@@ -14,7 +14,7 @@
         ExtendClientAreaToDecorationsHint="True"
         CanResize="False"
         SizeToContent="WidthAndHeight"
-        Icon="avares://HLC.Net/Assets/logo.png"
+        Icon="avares://HLC.Net/Assets/logo.ico"
         Title="HLC.Net">
   <Design.DataContext>
     <vm:MainWindowViewModel/>
