@@ -1,0 +1,47 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:vm="using:HLC.Net.ViewModels"
+        xmlns:assets="clr-namespace:HLC.Net.Assets"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="HLC.Net.ConfigWindow"
+        x:DataType="vm:ConfigWindowViewModel"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="#80FFFFFF"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        CanResize="False"
+        SizeToContent="WidthAndHeight"
+        Title="ConfigWindow">
+    <Design.DataContext>
+        <vm:ConfigWindowViewModel/>
+    </Design.DataContext>
+  <StackPanel Width="400" Margin="4">
+    <DockPanel Name="TitleBar" Margin="4">
+      <Image Width="20">/Assets/avalonia-logo.ico</Image>
+      <Label Content="{x:Static assets:Resources.Title}"/>
+    </DockPanel>
+    <DockPanel Margin="4">
+      <Label Width="80" Content="{x:Static assets:Resources.Config_Language}"/>
+      <ComboBox SelectedIndex="{CompiledBinding SelectedLanguage}" MaxDropDownHeight="100" Width="305">
+        <ComboBoxItem>🇺🇸 en-US</ComboBoxItem>
+        <ComboBoxItem>🇨🇳 zh-CN</ComboBoxItem>
+      </ComboBox>
+    </DockPanel>
+    <DockPanel Margin="4">
+      <Label Width="80" Content="{x:Static assets:Resources.Config_GamePath}"/>
+      <TextBox Width="265" Text="{CompiledBinding GamePath}"/>
+      <Button Margin="4,0" Width="40" Content="..." Click="Button_OpenGameFolder"/>
+    </DockPanel>
+    <DockPanel HorizontalAlignment="Right" Margin="4">
+      <Button Width="60" Click="Button_Save">
+        <materialIcons:MaterialIcon Kind="ContentSave"/>
+      </Button>
+      <Button Width="60" Click="Button_Cancel">
+        <materialIcons:MaterialIcon Kind="Cancel"/>
+      </Button>
+    </DockPanel>
+  </StackPanel>
+</Window>

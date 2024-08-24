@@ -1,0 +1,169 @@
+<Window
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:HLC.Net.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="400"
+    xmlns:assets="clr-namespace:HLC.Net.Assets"
+        x:Class="HLC.Net.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="#80FFFFFF"
+        ExtendClientAreaToDecorationsHint="True"
+        CanResize="False"
+        SizeToContent="WidthAndHeight"
+        Title="HLC.Net">
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
+  <Panel>
+    <StackPanel Width="800">
+      <DockPanel Margin="4">
+        <Image Width="20">/Assets/avalonia-logo.ico</Image>
+        <Label Content="{x:Static assets:Resources.Title}"/>
+      </DockPanel>
+      <Grid Name="MenuBar" ColumnDefinitions="*,*,*,*,*,*">
+        <Button HorizontalAlignment="Stretch" Grid.Column="0" Click="Button_OpenFile" Name="OpenFileButton">
+          <StackPanel>
+            <materialIcons:MaterialIcon Kind="FolderOpen"/>
+            <Label Content="{x:Static assets:Resources.Menu_OpenFile}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+          </StackPanel>
+        </Button>
+        <Button HorizontalAlignment="Stretch"  Grid.Column="1" Click="Button_SaveFile">
+          <StackPanel>
+            <materialIcons:MaterialIcon Kind="ContentSave"/>
+            <Label Content="{x:Static assets:Resources.Menu_SaveFile}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+          </StackPanel>
+        </Button>
+        <Button HorizontalAlignment="Stretch"  Grid.Column="2" Click="Button_OpenConfig">
+          <StackPanel>
+            <materialIcons:MaterialIcon Kind="Tools"/>
+            <Label Content="{x:Static assets:Resources.Menu_Option}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+          </StackPanel>
+        </Button>
+        <Button HorizontalAlignment="Stretch"  Grid.Column="3" Click="Button_OpenHelp">
+          <StackPanel>
+            <materialIcons:MaterialIcon Kind="Help"/>
+            <Label Content="{x:Static assets:Resources.Menu_Help}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+          </StackPanel>
+        </Button>
+        <Button HorizontalAlignment="Stretch"  Grid.Column="4" Click="Button_OpenAbout">
+          <StackPanel>
+            <materialIcons:MaterialIcon Kind="About"/>
+            <Label Content="{x:Static assets:Resources.Menu_About}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+          </StackPanel>
+        </Button>
+        <Button HorizontalAlignment="Stretch"  Grid.Column="5" Click="Button_Exit">
+          <StackPanel>
+            <materialIcons:MaterialIcon Kind="ExitToApp"/>
+            <Label Content="{x:Static assets:Resources.Menu_Exit}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+          </StackPanel>
+        </Button>
+      </Grid>
+      <Grid Name="Content" ColumnDefinitions="*,2*" Height="360" Margin="4">
+        <StackPanel Grid.Column="0">
+          <DockPanel Margin="0,2">
+            <Label Width="80" Content="{x:Static assets:Resources.Content_ImageWidth}"/>
+            <NumericUpDown Width="120" Value="{CompiledBinding ImageWidth}" Increment="1" FormatString="0" Minimum="0"/>
+            <Button Width="60" Margin="4,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="{x:Static assets:Resources.Content_ImageMaxOut}" Click="Content_MaxOutWidth"/>
+          </DockPanel>
+          <DockPanel Margin="0,2">
+            <Label Width="80" Content="{x:Static assets:Resources.Content_ImageHeight}"/>
+            <NumericUpDown Width="120" Value="{CompiledBinding ImageHeight}" Increment="1" FormatString="0" Minimum="0"/>
+            <Button Width="60" Margin="4,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="{x:Static assets:Resources.Content_ImageMaxOut}" Click="Content_MaxOutHeight"/>
+          </DockPanel>
+          <DockPanel Margin="0,2">
+            <Label Width="80" Content="{x:Static assets:Resources.Content_PixelCount}"/>
+            <TextBox IsReadOnly="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{CompiledBinding PixelCount}" Background="{CompiledBinding PixelCountColor}"/>
+          </DockPanel>
+          <DockPanel Margin="0,2">
+            <Button Width="130" Content="{x:Static assets:Resources.Content_ImageAutoResize}" Click="Content_AutoResize"/>
+            <Button Margin="4,0" Width="130" Content="{x:Static assets:Resources.Content_ImageResize}" Click="Content_ApplyResize"/>
+          </DockPanel>
+          <Separator/>
+          <CheckBox Content="{x:Static assets:Resources.Content_UseSvenCoopLimite}" IsChecked="{CompiledBinding UseSvenCoopLimit}"/>
+          <CheckBox Content="{x:Static assets:Resources.SaveOption_IsAlphaTest}" IsChecked="{CompiledBinding IsAlphaTest}"/>
+          <CheckBox Content="{x:Static assets:Resources.SaveOption_SaveWithImage}" IsChecked="{CompiledBinding SaveWithImage}"/>
+          <DockPanel>
+            <Label  Width="80" Content="{x:Static assets:Resources.SaveOption_Quntizater}"/>
+            <ComboBox SelectedIndex="{CompiledBinding SelectedQuantizer}" MaxDropDownHeight="150" Width="180">
+              <ComboBoxItem Content="{x:Static assets:Resources.SaveOption_Quntizater_Wu}"/>
+              <ComboBoxItem Content="{x:Static assets:Resources.SaveOption_Quntizater_Werner}"/>
+              <ComboBoxItem Content="{x:Static assets:Resources.SaveOption_Quntizater_Octree}"/>
+              <ComboBoxItem Content="{x:Static assets:Resources.SaveOption_Quntizater_Websafe}"/>
+            </ComboBox>
+          </DockPanel>
+        </StackPanel>
+        <Grid Grid.Column="1" ColumnDefinitions="6*,*" Margin="6,0,0,0">
+          <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1">
+            <Image Source="{CompiledBinding PreviewImage}"/>
+          </Border>
+          <StackPanel Grid.Column="1">
+            <Button HorizontalAlignment="Stretch" Margin="4,0,0,0" Click="Operate_Undo">
+              <StackPanel>
+                <materialIcons:MaterialIcon Kind="UndoVariant"/>
+                <Label Content="{x:Static assets:Resources.Operate_Undo}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button HorizontalAlignment="Stretch" Margin="4,0,0,0" Click="Operate_Sharper">
+              <StackPanel>
+                <materialIcons:MaterialIcon Kind="Pencil"/>
+                <Label Content="{x:Static assets:Resources.Operate_Sharper}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button HorizontalAlignment="Stretch" Margin="4,0,0,0" Click="Operate_Blur">
+              <StackPanel>
+                <materialIcons:MaterialIcon Kind="Brush"/>
+                <Label Content="{x:Static assets:Resources.Operate_Blur}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button HorizontalAlignment="Stretch" Margin="4,0,0,0" Click="Operate_MoreBright">
+              <StackPanel>
+                <DockPanel HorizontalAlignment="Center">
+                  <materialIcons:MaterialIcon Kind="SunAngle"/>
+                  <materialIcons:MaterialIcon Kind="ArrowUp"/>
+                </DockPanel>
+                <Label Content="{x:Static assets:Resources.Operate_Bright}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button HorizontalAlignment="Stretch" Margin="4,0,0,0" Click="Operate_LessBright">
+              <StackPanel>
+                <DockPanel HorizontalAlignment="Center">
+                  <materialIcons:MaterialIcon Kind="SunAngle"/>
+                  <materialIcons:MaterialIcon Kind="ArrowDown"/>
+                </DockPanel>
+                <Label Content="{x:Static assets:Resources.Operate_Bright}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button HorizontalAlignment="Stretch" Margin="4,0,0,0" Click="Operate_MoreContrast">
+              <StackPanel>
+                <DockPanel HorizontalAlignment="Center">
+                  <materialIcons:MaterialIcon Kind="Compare"/>
+                  <materialIcons:MaterialIcon Kind="ArrowUp"/>
+                </DockPanel>
+                <Label Content="{x:Static assets:Resources.Operate_Constrast}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+            <Button HorizontalAlignment="Stretch" Margin="4,0,0,0" Click="Operate_LessContrast">
+              <StackPanel>
+                <DockPanel HorizontalAlignment="Center">
+                  <materialIcons:MaterialIcon Kind="Compare"/>
+                  <materialIcons:MaterialIcon Kind="ArrowDown"/>
+                </DockPanel>
+                <Label Content="{x:Static assets:Resources.Operate_Constrast}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </Grid>
+      </Grid>
+      <Separator/>
+      <Grid Name="Footer" ColumnDefinitions="*,*,*" Margin="2,0,2,2">
+        <TextBox IsEnabled="False" Foreground="LightGray" Grid.Column="0" Text="{CompiledBinding Footer_LoadedPath}"/>
+        <TextBox IsEnabled="False" Foreground="LightGray" Grid.Column="1" Margin="4,0,0,0" Text="{CompiledBinding Footer_ImageSize}"/>
+        <TextBox IsEnabled="False" Foreground="LightGray" Grid.Column="2" Margin="4,0,0,0" Text="{CompiledBinding Footer_LastLoadTime}"/>
+      </Grid>
+    </StackPanel>
+  </Panel>
+</Window>
