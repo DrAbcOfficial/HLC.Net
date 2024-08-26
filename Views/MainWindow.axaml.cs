@@ -1,5 +1,4 @@
-using Avalonia;
-using Avalonia.Animation;
+Ôªøusing Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -8,6 +7,10 @@ using Avalonia.Platform.Storage;
 using Avalonia.Styling;
 using HLC.Net.Setting;
 using HLC.Net.ViewModels;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Dto;
+using MsBox.Avalonia.Enums;
+using MsBox.Avalonia.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -42,50 +45,45 @@ public partial class MainWindow : Window
         }
     }
 
-    private async void SendMessage(string message, Color color)
+    private async void SendMessage(string message, Icon icon)
     {
-        Border? border = this.FindControl<Border>("MessageCountainer");
-        TextBlock? msgBox = this.FindControl<TextBlock>("Message");
-        if (msgBox == null || border == null)
-            return;
-        border.Opacity = 1;
-        border.Background = new SolidColorBrush(color);
-        msgBox.Text = message;
-        var animation = new Animation()
+        var box = MessageBoxManager.GetMessageBoxStandard(new MessageBoxStandardParams
         {
-            Delay = TimeSpan.FromSeconds(5),
-            Duration = TimeSpan.FromSeconds(0.2),
-            FillMode = FillMode.Forward,
-            Children =
-            {
-                new KeyFrame
-                {
-                    Setters =
-                    {
-                        new Setter(OpacityProperty, 0.0)
-                    },
-                    Cue = new Cue(1.0)
-                }
-            }
-        };
-        await animation.RunAsync(border);
+            CanResize = false,
+            ContentMessage = message,
+            ShowInCenter = true,
+            CloseOnClickAway = true,
+            SizeToContent = SizeToContent.WidthAndHeight,
+            ButtonDefinitions = ButtonEnum.Ok,
+            Icon = icon,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            SystemDecorations = SystemDecorations.BorderOnly
+        });
+        await box.ShowWindowDialogAsync(this);
     }
     #region Button Commands
     public async void Button_OpenFile(object sender, RoutedEventArgs args)
     {
-        var file = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        try
         {
-            AllowMultiple = false,
-            FileTypeFilter = [FilePickerFileTypes.ImageAll]
-        });
-        if (file == null || file.Count <= 0)
-            return;
-        if (DataContext is not MainWindowViewModel model)
-            return;
-        model.PreviewImage?.Dispose();
-        model.PreviewImage = new Bitmap(file[0].OpenReadAsync().Result);
-        model.Footer_LoadedPath = file[0].TryGetLocalPath()!;
-        model.Footer_LastLoadTime = DateTime.Now.ToLongTimeString();
+            var file = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                AllowMultiple = false,
+                FileTypeFilter = [FilePickerFileTypes.ImageAll]
+            });
+            if (file == null || file.Count <= 0)
+                return;
+            if (DataContext is not MainWindowViewModel model)
+                return;
+            model.PreviewImage?.Dispose();
+            model.PreviewImage = new Bitmap(file[0].OpenReadAsync().Result);
+            model.Footer_LoadedPath = file[0].TryGetLocalPath()!;
+            model.Footer_LastLoadTime = DateTime.Now.ToLongTimeString();
+        }
+        catch (Exception ex)
+        {
+            SendMessage(ex.ToString(), MsBox.Avalonia.Enums.Icon.Error);
+        }
     }
     public async void Button_SaveFile(object sender, RoutedEventArgs args)
     {
@@ -94,12 +92,12 @@ public partial class MainWindow : Window
 
             if (DataContext is not MainWindowViewModel model || model.PreviewImage == null)
             {
-                SendMessage(Assets.Resources.Message_NullImage, Colors.LightYellow);
+                SendMessage(Assets.Resources.Message_NullImage, MsBox.Avalonia.Enums.Icon.Warning);
                 return;
             }
             if (model.PreviewImage.Size.Width * model.PreviewImage.Size.Height > PixelLimit)
             {
-                SendMessage(Assets.Resources.Message_TooBigImage, Colors.LightYellow);
+                SendMessage(Assets.Resources.Message_TooBigImage, MsBox.Avalonia.Enums.Icon.Warning);
                 return;
             }
             var wadtype = new FilePickerFileType("GoldSrc WAD3")
@@ -150,7 +148,7 @@ public partial class MainWindow : Window
                 }),
             };
             imageSharpImage.Mutate(x => x.Quantize(quantizer));
-            //…˙≥……´∞Â
+            //ÁîüÊàêËâ≤Êùø
             List<KeyValuePair<Rgba32, byte>> palette = [];
             for (int j = 0; j < imageSharpImage.Height; j++)
             {
@@ -250,11 +248,11 @@ public partial class MainWindow : Window
 
             if (model.m_bSaveWithImage)
                 imageSharpImage.SaveAsPng(Path.ChangeExtension(file.TryGetLocalPath()!, "png"));
-            SendMessage(Assets.Resources.Message_SaveDone, Colors.LightGreen);
+            SendMessage(Assets.Resources.Message_SaveDone, MsBox.Avalonia.Enums.Icon.Success);
         }
         catch (Exception ex)
         {
-            SendMessage(ex.ToString(), Colors.LightPink);
+            SendMessage(ex.ToString(), MsBox.Avalonia.Enums.Icon.Error);
         }
     }
     public async void Button_OpenConfig(object sender, RoutedEventArgs args)
@@ -342,14 +340,14 @@ public partial class MainWindow : Window
     {
         if (DataContext is not MainWindowViewModel model || model.PreviewImage == null)
         {
-            SendMessage(Assets.Resources.Message_NullImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_NullImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         int width = model.ImageWidth;
         int height = model.ImageHeight;
         if (width * height > PixelLimit)
         {
-            SendMessage(Assets.Resources.Message_TooBigImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_TooBigImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         var renderTarget = new RenderTargetBitmap(new PixelSize(width, height));
@@ -398,12 +396,12 @@ public partial class MainWindow : Window
     {
         if (DataContext is not MainWindowViewModel model || model.PreviewImage == null)
         {
-            SendMessage(Assets.Resources.Message_NullImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_NullImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         if (model.PreviewImage.Size.Width * model.PreviewImage.Size.Height > PixelLimit)
         {
-            SendMessage(Assets.Resources.Message_TooBigImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_TooBigImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         model.PreviewImage = AdjustBitmap(model.PreviewImage, x => x.GaussianSharpen());
@@ -412,12 +410,12 @@ public partial class MainWindow : Window
     {
         if (DataContext is not MainWindowViewModel model || model.PreviewImage == null)
         {
-            SendMessage(Assets.Resources.Message_NullImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_NullImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         if (model.PreviewImage.Size.Width * model.PreviewImage.Size.Height > PixelLimit)
         {
-            SendMessage(Assets.Resources.Message_TooBigImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_TooBigImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         model.PreviewImage = AdjustBitmap(model.PreviewImage, x => x.GaussianBlur());
@@ -426,12 +424,12 @@ public partial class MainWindow : Window
     {
         if (DataContext is not MainWindowViewModel model || model.PreviewImage == null)
         {
-            SendMessage(Assets.Resources.Message_NullImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_NullImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         if (model.PreviewImage.Size.Width * model.PreviewImage.Size.Height > PixelLimit)
         {
-            SendMessage(Assets.Resources.Message_TooBigImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_TooBigImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         model.PreviewImage = AdjustBitmap(model.PreviewImage, x => x.Brightness(1.1f));
@@ -440,12 +438,12 @@ public partial class MainWindow : Window
     {
         if (DataContext is not MainWindowViewModel model || model.PreviewImage == null)
         {
-            SendMessage(Assets.Resources.Message_NullImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_NullImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         if (model.PreviewImage.Size.Width * model.PreviewImage.Size.Height > PixelLimit)
         {
-            SendMessage(Assets.Resources.Message_TooBigImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_TooBigImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         model.PreviewImage = AdjustBitmap(model.PreviewImage, x => x.Brightness(0.9f));
@@ -454,12 +452,12 @@ public partial class MainWindow : Window
     {
         if (DataContext is not MainWindowViewModel model || model.PreviewImage == null)
         {
-            SendMessage(Assets.Resources.Message_NullImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_NullImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         if (model.PreviewImage.Size.Width * model.PreviewImage.Size.Height > PixelLimit)
         {
-            SendMessage(Assets.Resources.Message_TooBigImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_TooBigImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         model.PreviewImage = AdjustBitmap(model.PreviewImage, x => x.Contrast(1.1f));
@@ -468,12 +466,12 @@ public partial class MainWindow : Window
     {
         if (DataContext is not MainWindowViewModel model || model.PreviewImage == null)
         {
-            SendMessage(Assets.Resources.Message_NullImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_NullImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         if (model.PreviewImage.Size.Width * model.PreviewImage.Size.Height > PixelLimit)
         {
-            SendMessage(Assets.Resources.Message_TooBigImage, Colors.LightYellow);
+            SendMessage(Assets.Resources.Message_TooBigImage, MsBox.Avalonia.Enums.Icon.Warning);
             return;
         }
         model.PreviewImage = AdjustBitmap(model.PreviewImage, x => x.Contrast(0.9f));
