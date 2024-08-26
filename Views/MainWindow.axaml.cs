@@ -179,28 +179,7 @@ public partial class MainWindow : Window
             //Head buf
             sw.Write((uint)1);
             //Lump offset
-            sw.Write((uint)12);
-            //lump
-            //lump int textureoffset;
-            sw.Write(44);
-            static int RequiredPadding(int length, int padToMultipleOf)
-            {
-                var excess = length % padToMultipleOf;
-                return excess == 0 ? 0 : padToMultipleOf - excess;
-            }
-            int sizeOnDisk = 40 + size + (size / 4) + (size / 16) + (size / 64) + sizeof(short) + 256 * 3 + RequiredPadding(2 + 256 * 3, 4);
-            //lump int sizeOnDisk;
-            //lump int size;
-            sw.Write(sizeOnDisk);
-            sw.Write(sizeOnDisk);
-            //lump char type;
-            sw.Write((byte)0x43);
-            //lump bool compression;
-            sw.Write((byte)0x00);
-            //lump short dummy;
-            sw.Write((short)0x0000);
-            //lump char name[16];
-            sw.Write(Encoding.UTF8.GetBytes("{LOGO\0\0\0\0\0\0\0\0\0\0\0"));
+            sw.Write((uint)0);
             //mips
             //char name[16];
             sw.Write(Encoding.UTF8.GetBytes("{LOGO\0\0\0\0\0\0\0\0\0\0\0"));
@@ -235,15 +214,40 @@ public partial class MainWindow : Window
             //color used
             sw.Write((short)256);
             //Palette
-            for (int i = 0; i < 3; i++)
+            foreach (var c in palette)
             {
-                foreach (var c in palette)
-                {
-                    sw.Write(c.Key.R);
-                    sw.Write(c.Key.G);
-                    sw.Write(c.Key.B);
-                }
+                sw.Write(c.Key.R);
+                sw.Write(c.Key.G);
+                sw.Write(c.Key.B);
             }
+            //dummy pad
+            sw.Write((short)0x0000);
+            long lumpoffset = sw.BaseStream.Position;
+            //lump
+            //lump int textureoffset;
+            sw.Write(12);
+            static int RequiredPadding(int length, int padToMultipleOf)
+            {
+                var excess = length % padToMultipleOf;
+                return excess == 0 ? 0 : padToMultipleOf - excess;
+            }
+            int sizeOnDisk = 40 + size + (size / 4) + (size / 16) + (size / 64) + sizeof(short) + 256 * 3 + RequiredPadding(2 + 256 * 3, 4);
+            //lump int sizeOnDisk;
+            //lump int size;
+            sw.Write(sizeOnDisk);
+            sw.Write(sizeOnDisk);
+            //lump char type;
+            sw.Write((byte)0x43);
+            //lump bool compression;
+            sw.Write((byte)0x00);
+            //lump short dummy;
+            sw.Write((short)0x0000);
+            //lump char name[16];
+            sw.Write(Encoding.UTF8.GetBytes("{LOGO\0\0\0\0\0\0\0\0\0\0\0"));
+            //lump offset
+            sw.Seek(8, SeekOrigin.Begin);
+            sw.Write((uint)lumpoffset);
+
             if (model.m_bSaveWithImage)
                 imageSharpImage.SaveAsPng(Path.ChangeExtension(file.TryGetLocalPath()!, "png"));
             SendMessage(Assets.Resources.Message_SaveDone, Colors.LightGreen);

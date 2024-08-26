@@ -24,7 +24,7 @@ public partial class ConfigWindow : Window
     {
         var type = new FilePickerFileType("Game Excute File")
         {
-            Patterns = ["hl.exe", "svencoop.exe", "cstrike.exe"],
+            Patterns = ["hl.exe", "svencoop.exe", "cstrike.exe", "bshift.exe", "tfc.exe"],
         };
         var file = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
