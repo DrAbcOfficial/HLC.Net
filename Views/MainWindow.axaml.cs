@@ -218,17 +218,21 @@ public partial class MainWindow : Window
                 sw.Write(c.Key.G);
                 sw.Write(c.Key.B);
             }
-            //dummy pad
-            sw.Write((short)0x0000);
-            long lumpoffset = sw.BaseStream.Position;
-            //lump
-            //lump int textureoffset;
-            sw.Write(12);
             static int RequiredPadding(int length, int padToMultipleOf)
             {
                 var excess = length % padToMultipleOf;
                 return excess == 0 ? 0 : padToMultipleOf - excess;
             }
+            long lumpoffset = sw.BaseStream.Position;
+            int pad = RequiredPadding((int)lumpoffset, 4);
+            //dummy pad
+            for(int i = 0; i < pad; i++)
+            {
+                sw.Write((byte)0x00);
+            } 
+            //lump
+            //lump int textureoffset;
+            sw.Write(12);
             int sizeOnDisk = 40 + size + (size / 4) + (size / 16) + (size / 64) + sizeof(short) + 256 * 3 + RequiredPadding(2 + 256 * 3, 4);
             //lump int sizeOnDisk;
             //lump int size;
