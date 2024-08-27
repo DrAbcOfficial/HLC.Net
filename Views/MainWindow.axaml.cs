@@ -223,13 +223,13 @@ public partial class MainWindow : Window
                 var excess = length % padToMultipleOf;
                 return excess == 0 ? 0 : padToMultipleOf - excess;
             }
-            long lumpoffset = sw.BaseStream.Position;
-            int pad = RequiredPadding((int)lumpoffset, 4);
+            int pad = RequiredPadding((int)sw.BaseStream.Position, 4);
             //dummy pad
             for(int i = 0; i < pad; i++)
             {
                 sw.Write((byte)0x00);
-            } 
+            }
+            long lumpoffset = sw.BaseStream.Position;
             //lump
             //lump int textureoffset;
             sw.Write(12);
