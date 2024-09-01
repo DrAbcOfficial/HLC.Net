@@ -1,16 +1,13 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
-using Avalonia.Styling;
 using HLC.Net.Setting;
 using HLC.Net.ViewModels;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Dto;
 using MsBox.Avalonia.Enums;
-using MsBox.Avalonia.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -21,7 +18,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Color = Avalonia.Media.Color;
 
 namespace HLC.Net.Views;
 
@@ -225,7 +221,7 @@ public partial class MainWindow : Window
             }
             int pad = RequiredPadding((int)sw.BaseStream.Position, 4);
             //dummy pad
-            for(int i = 0; i < pad; i++)
+            for (int i = 0; i < pad; i++)
             {
                 sw.Write((byte)0x00);
             }
@@ -261,9 +257,11 @@ public partial class MainWindow : Window
     }
     public async void Button_OpenConfig(object sender, RoutedEventArgs args)
     {
-        var createNew = new ConfigWindow();
-        var createNewData = new ConfigWindowViewModel();
-        createNew.DataContext = createNewData;
+        var createNew = new ConfigWindow
+        {
+            DataContext = new ConfigWindowViewModel(),
+            Position = Position
+        };
         await createNew.ShowDialog(this);
     }
     public void Button_OpenHelp(object sender, RoutedEventArgs args)
@@ -276,7 +274,10 @@ public partial class MainWindow : Window
     }
     public async void Button_OpenAbout(object sender, RoutedEventArgs args)
     {
-        var createNew = new AboutWindow();
+        var createNew = new AboutWindow
+        {
+            Position = Position
+        };
         await createNew.ShowDialog(this);
     }
     public void Button_Exit(object sender, RoutedEventArgs args)

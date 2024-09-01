@@ -1,0 +1,62 @@
+name: Release File
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        os: [ubuntu, windows, macos]
+        arch: [x64]
+
+    runs-on: ${{ matrix.os }}-latest 
+
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Publish
+      shell: pwsh
+      run: cd scripts && ./publish-all.ps1 -os ${{ matrix.os }} -arch ${{ matrix.arch }}
+
+    - name: Zipping All
+      if: matrix.os == 'windows'
+      uses: vimtor/action-zip@v1
+      with:
+          files: ./build
+          dest: HLC.Net-${{ matrix.os }}-${{ matrix.arch }}.zip
+
+    - name: Tarball All
+      if: matrix.os != 'windows'
+      run: tar -czvf ./HLC.Net-${{ matrix.os }}-${{ matrix.arch }}.tar.gz ./build
+
+    - name: Create Release Unix
+      if: matrix.os != 'windows' && startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+          name: HLC.Net-${{ github.ref }}
+          files: |
+            ./HLC.Net-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+
+    - name: Create Release Win
+      if: matrix.os == 'windows' && startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+          name: HLC.Net-${{ github.ref }}
+          files: |
+            HLC.Net-${{ matrix.os }}-${{ matrix.arch }}.zip

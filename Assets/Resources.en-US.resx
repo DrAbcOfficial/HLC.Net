@@ -139,10 +139,10 @@
     <value>Exit</value>
   </data>
   <data name="Content_ImageWidth" xml:space="preserve">
-    <value>Image Width:</value>
+    <value>Img Width:</value>
   </data>
   <data name="Content_ImageHeight" xml:space="preserve">
-    <value>Image Height:</value>
+    <value>Img Height:</value>
   </data>
   <data name="Content_ImageMaxOut" xml:space="preserve">
     <value>Max</value>
