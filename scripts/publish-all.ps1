@@ -20,7 +20,7 @@ if (Test-Path -Path ".\build" -PathType Container) {
 New-Item ".\build" -ItemType "directory"
 
 &"dotnet" "publish" $callparam
-Copy-Item -Path @("build") -Destination ".." -Recurse -Exclude "*.pdb" -Force
+Remove-Item ".\build\*.pdb" -Force
 
 switch ($os)
 {
